@@ -1,5 +1,7 @@
 <?php
 
+use App\Services\Mailers\Mailer;
+use App\Services\MailService;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,4 +15,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [\App\Http\Controllers\Controller::class, 'index']);
+Route::get('/', function (){
+    $obj = new MailService(new Mailer());
+    $obj->sendMail('996708068599','Text message','test');
+});

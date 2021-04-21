@@ -2,13 +2,13 @@
 
 namespace App\Services;
 
+use App\Jobs\SendNotificationError;
 use App\Services\Validation\CountRequestsPerMinute;
 use App\Services\Validation\Phone;
 use App\Services\Validation\Token;
 use App\Services\Validation\Validator;
 use Illuminate\Support\Facades\Log;
 use App\Models\Log as ModelLog;
-use Illuminate\Support\Facades\Mail;
 use Monolog\Logger;
 
 class MailService
@@ -40,8 +40,7 @@ class MailService
             if ($validator->isValid()) {
                 if ($isProd) {
 //                    TODO: работает отправка для моего номера 996708068599
-//                    $this->mailer->sendTo($phoneNumber, $text);
-                    echo "send to $phoneNumber message: $text";
+                    $this->mailer->sendTo($phoneNumber, $text);
                 } else {
                     $message = 'Send message to ' . $phoneNumber . ' with text: ' . $text;
                     Log::info($message);
@@ -59,6 +58,7 @@ class MailService
                 $errorMessage = 'Throw exception with message: ' . $e->getMessage();
                 Log::error($errorMessage);
             }
+            SendNotificationError::dispatch(['phone' => $phoneNumber, 'message' => $e->getMessage()]);
         }
     }
 
