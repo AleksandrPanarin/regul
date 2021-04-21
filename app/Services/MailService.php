@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Jobs\SendNotificationError;
+use App\Events\SmsErrorEvent;
 use App\Services\Validation\CountRequestsPerMinute;
 use App\Services\Validation\Phone;
 use App\Services\Validation\Token;
@@ -58,7 +58,7 @@ class MailService
                 $errorMessage = 'Throw exception with message: ' . $e->getMessage();
                 Log::error($errorMessage);
             }
-            SendNotificationError::dispatch(['phone' => $phoneNumber, 'message' => $e->getMessage()]);
+            event(new SmsErrorEvent(['phone' => $phoneNumber, 'message' => $e->getMessage()]));
         }
     }
 

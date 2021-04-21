@@ -16,6 +16,7 @@ services:
     working_dir: "/app"
     depends_on:
       - mysql
+    container_name: app
 
   nginx:
     image: webdevops/nginx
