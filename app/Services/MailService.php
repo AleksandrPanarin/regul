@@ -7,6 +7,7 @@ use App\Services\Validation\CountRequestsPerMinute;
 use App\Services\Validation\Phone;
 use App\Services\Validation\Token;
 use App\Services\Validation\Validator;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 use App\Models\Log as ModelLog;
 use Monolog\Logger;
@@ -34,7 +35,7 @@ class MailService
      */
     public function sendMail(string $phoneNumber, string $text, string $token): void
     {
-        $isProd = env('APP_ENV') == 'prod';
+        $isProd = App::environment('prod');
         try {
             $validator = new Validator(new Token($token), new CountRequestsPerMinute(), new Phone($phoneNumber));
             if ($validator->isValid()) {
